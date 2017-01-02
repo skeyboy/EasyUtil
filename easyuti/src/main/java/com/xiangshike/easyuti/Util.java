@@ -37,7 +37,7 @@ public class Util {
         }
         return false;
     }
-    
+
     /**
      * 检测是否是模拟器
      * @param context
