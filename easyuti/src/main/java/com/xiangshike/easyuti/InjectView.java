@@ -13,4 +13,6 @@ import java.lang.annotation.Target;
 public @interface InjectView {
     int id() default -1;
 
+    int alias() default -1;
+
 }
