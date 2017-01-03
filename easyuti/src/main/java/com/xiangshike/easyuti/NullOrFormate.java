@@ -10,14 +10,14 @@ import java.lang.annotation.Target;
  */
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.LOCAL_VARIABLE, ElementType.FIELD, ElementType.METHOD})
+@Target({ ElementType.FIELD})
 public @interface NullOrFormate {
 
     /**
      * 时间戳字符串准换为对应的时间格式
      * @return
      */
-    String timeFormate() default "yyy-MM-dd HH:mm:ss";
+    String timeFormate() default "yyyy-MM-dd HH:mm:ss";
 
 
     String notNull() default "";
