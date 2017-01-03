@@ -1,5 +1,7 @@
 package com.xiangshike.easyuti;
 
+import android.util.Log;
+
 import java.lang.reflect.Field;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -19,37 +21,38 @@ public class NullOrFormateParser {
         Field[] fields = clazz.getFields();
         for (Field field :
                 fields) {
+            field.setAccessible(true);
+
             if (field.isAnnotationPresent(NullOrFormate.class)) {
                 NullOrFormate nullOrFormate = field.getAnnotation(NullOrFormate.class);
                 String notNullStr = nullOrFormate.notNull();
                 String timeFormate = nullOrFormate.timeFormate();
                 boolean isTime = nullOrFormate.isTime();
 
-                if (timeFormate != null) {
-                    if (isTime && timeFormate.length() > 0 && timeFormate.matches("[0-9]+")) {
+                if ("".equals(notNullStr) || null == notNullStr) {
+                    try {
+                        field.set(object, "");
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
+                }
+                if (isTime) {
 
-                        try {
-                            String time = (String) field.get(object);
+
+                    try {
+                        String time = (String) field.get(object);
+                        if (time != null && time.matches("[0-9]+")) {
                             DateFormat dateFormat = new SimpleDateFormat(timeFormate);
                             Date date = new Date(time);
                             field.set(object, dateFormat.format(date));
-                        } catch (IllegalAccessException e) {
-                            e.printStackTrace();
+                            Log.d("NullOrFormate", time+dateFormat.format(date));
                         }
-                    }
-                }
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                        Log.d("NullOrFormate", e.toString());
 
-                if (notNullStr != null) {
-                    if (notNullStr.length() > 0) {
-                        try {
-                            String value = (String) field.get(object);
-                            if (value == null) {
-                                field.set(object, "");
-                            }
-                        } catch (IllegalAccessException e) {
-                            e.printStackTrace();
-                        }
                     }
+
                 }
 
 
